@@ -38,7 +38,6 @@ public class PagingUser extends HttpServlet {
 		
 		int page = pageparam == null? 1 :  Integer.parseInt(pageparam) ;
 		int pageSize = 5;
-		
 		if(pageSizeParam == null) {
 			pageSize = 5;
 		}else if(pageSizeParam.equals("")) {
@@ -54,15 +53,19 @@ public class PagingUser extends HttpServlet {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(type == null || type.equals("")) {
 			map = userService.selectPagingUser(vo);
+			list = (List<UserVo>) map.get("userList");
 		}else if(type.equals("i")) {
 			vo.setVal(search);
 			map = userService.idFindUser(vo);
+			list = (List<UserVo>) map.get("userList");
 		}else if(type.equals("n")) {
 			vo.setVal(search);
 			map = userService.nameFindUser(vo);
+			list = (List<UserVo>) map.get("userList");
 		}else if(type.equals("a")) {
 			vo.setVal(search);
 			map = userService.aliasFindUser(vo);
+			list = (List<UserVo>) map.get("userList");
 		}
 		
 		
@@ -71,10 +74,13 @@ public class PagingUser extends HttpServlet {
 		
 		int pagination = (int)Math.ceil((double)userCnt /pageSize);
 		
-		list = (List<UserVo>) map.get("userList");
+		//list = (List<UserVo>) map.get("userList");
+		if(list != null) {
+			req.setAttribute("userList", list);
+		}
 		
-		
-		req.setAttribute("userList", list);
+		req.setAttribute("type", type);
+		req.setAttribute("pagesize", pageSizeParam);
 		req.setAttribute("pagination", pagination);
 		req.setAttribute("pageVo", vo);
 		req.getRequestDispatcher("/memberList.jsp").forward(req, resp);

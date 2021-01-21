@@ -10,27 +10,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import test.user.service.UserService;
 import test.user.service.UserServiceI;
-import test.user.vo.UserVo;
 
-@WebServlet("/userDetail.do")
-public class UserDetail extends HttpServlet{
+@WebServlet("/delete.do")
+public class DeleteUser extends HttpServlet{
 	private static final long serialVersionUID = 1L;
+	
 	private UserServiceI service = new UserService();
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String userid = req.getParameter("userid");
-		UserVo vo = service.selectUser(userid);
-		req.setAttribute("vo", vo);
-		req.getRequestDispatcher("/memberDetail.jsp").forward(req, resp);
-	}
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String userid = req.getParameter("userid");
 		
-		UserVo vo = service.selectUser(userid);
-		req.setAttribute("vo", vo);
-		req.getRequestDispatcher("/memberModify.jsp").forward(req, resp);
+		int res = service.deleteUser(userid);
+		
+		if(res == 1) {
+			req.getRequestDispatcher("/paging.do").forward(req, resp);
+		}else {
+			resp.sendRedirect(req.getContextPath()+"/userDetail.do?userid="+userid);
+		}
+		
 	}
 }

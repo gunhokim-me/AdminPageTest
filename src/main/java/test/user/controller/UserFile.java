@@ -1,8 +1,10 @@
 package test.user.controller;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,25 +14,33 @@ import test.user.service.UserService;
 import test.user.service.UserServiceI;
 import test.user.vo.UserVo;
 
-@WebServlet("/userDetail.do")
-public class UserDetail extends HttpServlet{
-	private static final long serialVersionUID = 1L;
+@WebServlet("/userfile")
+public class UserFile extends HttpServlet {
+	
 	private UserServiceI service = new UserService();
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String userid = req.getParameter("userid");
 		UserVo vo = service.selectUser(userid);
-		req.setAttribute("vo", vo);
-		req.getRequestDispatcher("/memberDetail.jsp").forward(req, resp);
-	}
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String userid = req.getParameter("userid");
+		String path ="";
 		
-		UserVo vo = service.selectUser(userid);
-		req.setAttribute("vo", vo);
-		req.getRequestDispatcher("/memberModify.jsp").forward(req, resp);
+		if(vo.getRealfilename() == null) {
+			path = getServletContext().getRealPath("/profile/unknown.jpg");
+		}else {
+			path ="d:/upload/" + vo.getRealfilename(); 
+		}
+		FileInputStream fis = new FileInputStream(path);
+		ServletOutputStream sos = resp.getOutputStream();
+		
+		byte[] buff = new byte[512];
+		
+		while(fis.read(buff) != -1 ) {
+			sos.write(buff);
+		}
+		
+		fis.close();
+		sos.close();
 	}
+
 }

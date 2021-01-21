@@ -11,13 +11,38 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-
+<%@ include file="/common/querylib.jsp" %>
 <title>회원 정보</title>
 
 <!-- Font Awesome Icons -->
 <link rel="stylesheet" href="./resources/bootstrap/plugins/fontawesome-free/css/all.min.css">
 <!-- Theme style -->
 <link rel="stylesheet" href="./resources/bootstrap/dist/css/adminlte.min.css">
+
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+$(function(){
+	//수정 버튼
+	$("#modifyBtn").on("click",function(){
+		$("#frm").attr("method" , "POST");
+		$("#frm").attr("action" , "${cp}/userDetail.do");
+		$("#frm").submit();
+	});
+	
+	//삭제 버튼
+	$("#deleteBtn").on("click",function(){
+		$("#frm").attr("action" , "${cp}/delete.do");
+		$("#frm").submit();
+	});
+	
+	//취소버튼
+	$("#cancelBtn").on("click",function(){
+		$("#frm").attr("action" , "${cp}/paging.do");
+		$("#frm").submit();
+	});
+	
+});
+</script>
 
 </head>
 <body class="hold-transition sidebar-mini">
@@ -39,18 +64,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<!-- form start -->
 						<div class="card">
 							<div class="register-card-body">
-								<form role="form" class="form-horizontal" >
+								<form role="form" id="frm" class="form-horizontal" >
+									<input type="hidden" name="userid" value="${vo.userid }">
 									<div class="input-group mb-3">
 										<div class="mailbox-attachments clearfix" style="text-align: center; width:100%;">
 											<div class="mailbox-attachment-icon has-img" id="pictureView" style="border: 1px solid green; height: 200px; width: 140px; margin: 0 auto;">
-												<img id="pictureViewImg" style="width:100%; height:100%;"/>
+												<img src="${cp }/userfile?userid=${vo.userid}" id="pictureViewImg" style="width:100%; height:100%;"/>
 											</div>
-											<div class="mailbox-attachment-info">
+											<!-- <div class="mailbox-attachment-info">
 												<div class="input-group input-group-sm">
-													<input id="picture" class="form-control"
-														   type="file" name="picture" accept=".gif, .jpg, .png" style="height:37px;"/>
+													<input id="picture" class="form-control" type="file" name="picture" accept=".gif, .jpg, .png" style="height:37px;"/>
 												</div>
-											</div>
+											</div> -->
 										</div>
 										<br />
 									</div>
@@ -60,16 +85,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 											<span style="color: red; font-weight: bold;">*</span>아이디
 										</label>
 										<div class="col-sm-9 input-group-sm">
-											<input name="id" type="text" class="form-control" id="id" placeholder="회원 id">
-										</div>
-									</div>
-									
-									<div class="form-group row">
-										<label class="col-sm-3" style="font-size: 0.9em;">
-											아이디
-										</label>
-										<div class="col-sm-9 input-group input-group-sm">
-											<span class="input-group-append-sm">brown</span>
+											<span class="input-group-append-sm">${vo.userid }</span>
 										</div>
 									</div>
 									
@@ -77,7 +93,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 										<label for="pwd" class="col-sm-3" style="font-size: 0.9em;">
 											<span style="color: red; font-weight: bold;">*</span>패스워드</label>
 										<div class="col-sm-9 input-group-sm">
-											<input class="form-control" name="pwd" type="password" class="form-control" id="pwd" placeholder="비밀번호" />
+											<span class="input-group-append-sm">${vo.pass }</span>
 										</div>
 									</div>
 									
@@ -86,43 +102,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
 											<span style="color: red; font-weight: bold;">*</span>이 름
 										</label>
 										<div class="col-sm-9 input-group-sm">
-											<input class="form-control" name="name" type="text" id="name" placeholder="이름" />
+											<span class="input-group-append-sm">${vo.usernm }</span>
 										</div>
 
 									</div>
 									<div class="form-group row">
 										<label for="alias" class="col-sm-3" style="font-size: 0.9em;">별명</label>
 										<div class="col-sm-9 input-group-sm">
-											<input class="form-control" name="alias" type="text" id="alias" placeholder="별명">
+											<span class="input-group-append-sm">${vo.alias }</span>
 										</div>
 									</div>
 									<div class="form-group row">
 										<label for="addr1" class="col-sm-3 control-label">주소</label>
 										<div class="col-sm-3 input-group-sm">
-											<input name="addr1" type="text" class="form-control" id="addr1" placeholder="주소" readonly>
+											<span class="input-group-append-sm">${vo.addr1 }</span>
 										</div>
 										<div class="col-sm-3 input-group-sm">
-											<input name="addr2" type="text" class="form-control" id="addr2" placeholder="상세주소">	
+											<span class="input-group-append-sm">${vo.addr2 }</span>	
 										</div>
 										
 										<div class="col-sm-2 input-group-sm">
-											<input name="zipcode" type="text" class="form-control" id="zipcode" placeholder="우편번호" readonly>
+											<span class="input-group-append-sm">${vo.zipcode }</span>
 										</div>
-										<div class="col-sm-1 input-group-sm">
+										<!-- <div class="col-sm-1 input-group-sm">
 											<span class="input-group-append-sm">
 												<button type="button" class="btn btn-info btn-sm btn-append">주소검색</button>
 											</span>
-										</div>
+										</div> -->
 									</div>
 									
 									<div class="card-footer">
 										<div class="row">
 											<div class="col-sm-6">
-												<button type="button" id="registBtn" class="btn btn-info">등록</button>
+												<button type="button" id="modifyBtn" class="btn btn-info">수정</button>
+												<button type="button" id="deleteBtn" class="btn btn-warning">삭제</button>
 											</div>
 
 											<div class="col-sm-6">
-												<button type="button" id="cancelBtn" onclick="CloseWindow();" class="btn btn-default float-right">&nbsp;&nbsp;&nbsp;취 &nbsp;&nbsp;소&nbsp;&nbsp;&nbsp;</button>
+												<button type="button" id="cancelBtn" class="btn btn-default float-right">&nbsp;&nbsp;&nbsp;취 &nbsp;&nbsp;소&nbsp;&nbsp;&nbsp;</button>
 											</div>
 
 										</div>
@@ -149,17 +166,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 	</footer>
 	</div>
 	<!-- ./wrapper -->
-
-	<!-- REQUIRED SCRIPTS -->
-
-	<!-- jQuery -->
-	<script src="./resources/bootstrap/plugins/jquery/jquery.min.js"></script>
-
-	<!-- Bootstrap 4 -->
-	<script src="./resources/bootstrap/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<!-- AdminLTE App -->
-	<script src="./resources/bootstrap/dist/js/adminlte.min.js"></script>
-	<script>
 		$(document).ready(function(){
 			// picture input의 파일 변경시 이벤트 
 			$("#picture").change(function(){

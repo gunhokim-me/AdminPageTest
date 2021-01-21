@@ -14,6 +14,22 @@ public class UserVo {
 	private String filename;
 	private String realfilename;
 	
+	public UserVo() {}
+	
+	public UserVo(String userid, String usernm, String pass, Date reg_dt, String alias, String addr1,
+			String addr2, String zipcode, String filename, String realfilename) {
+		this.userid = userid;
+		this.usernm = usernm;
+		this.pass= pass;
+		this.reg_dt = reg_dt;
+		this.alias = alias;
+		this.addr1 = addr1;
+		this.addr2 = addr2;
+		this.zipcode = zipcode;
+		this.filename = filename;
+		this.realfilename = realfilename;
+	}
+	
 	public String getUserid() {
 		return userid;
 	}

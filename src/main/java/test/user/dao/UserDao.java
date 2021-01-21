@@ -42,6 +42,7 @@ public class UserDao implements UserDaoI {
 	public List<UserVo> idFindUser(String userid) {
 		SqlSession session = MybatisUtil.getSqlSession();
 		List<UserVo> list = session.selectList("users.idFindUser", userid);
+		session.close();
 		return list;
 	}
 	
@@ -50,7 +51,17 @@ public class UserDao implements UserDaoI {
 	public int idFindUserCount(String userid) {
 		SqlSession session = MybatisUtil.getSqlSession();
 		int cnt = session.selectOne("users.idFindUserCount", userid);
+		session.close();
 		return cnt;
+	}
+	
+	//아이디로 검색한 회원 페이징
+	@Override
+	public List<UserVo> idFineUserPaging(PageVo vo) {
+		SqlSession session = MybatisUtil.getSqlSession();
+		List<UserVo> userList = session.selectList("users.idFineUserPaging",vo);
+		session.close();
+		return userList;
 	}
 
 	//이름으로 검색
@@ -58,6 +69,7 @@ public class UserDao implements UserDaoI {
 	public List<UserVo> nameFindUser(String usernm) {
 		SqlSession session = MybatisUtil.getSqlSession();
 		List<UserVo> list = session.selectList("users.nameFindUser", usernm);
+		session.close();
 		return list;
 	}
 
@@ -66,7 +78,17 @@ public class UserDao implements UserDaoI {
 	public int nameFindUserCount(String usernm) {
 		SqlSession session = MybatisUtil.getSqlSession();
 		int cnt = session.selectOne("users.nameFindUserCount", usernm);
+		session.close();
 		return cnt;
+	}
+	
+	//이름으로 검색한 회원 페이징
+	@Override
+	public List<UserVo> nameFindUserPaging(PageVo vo) {
+		SqlSession session = MybatisUtil.getSqlSession();
+		List<UserVo> userList = session.selectList("users.nameFindUserPaging",vo);
+		session.close();
+		return userList;
 	}
 	
 	//별명으로 검색
@@ -74,6 +96,7 @@ public class UserDao implements UserDaoI {
 	public List<UserVo> aliasFindUser(String alias) {
 		SqlSession session = MybatisUtil.getSqlSession();
 		List<UserVo> list = session.selectList("users.aliasFindUser", alias);
+		session.close();
 		return list;
 	}
 
@@ -82,14 +105,24 @@ public class UserDao implements UserDaoI {
 	public int aliasFindUserCount(String alias) {
 		SqlSession session = MybatisUtil.getSqlSession();
 		int cnt = session.selectOne("users.aliasFindUserCount", alias);
+		session.close();
 		return cnt;
 	}
 	
+	//별명으로 검색한 회원 페이징
+	@Override
+	public List<UserVo> aliasFindUserPaging(PageVo vo) {
+		SqlSession session = MybatisUtil.getSqlSession();
+		List<UserVo> userList = session.selectList("users.aliasFindUserPaging",vo);
+		session.close();
+		return userList;
+	}
 	//선택한 회원 조회
 	@Override
 	public UserVo selectUser(String userid) {
 		SqlSession session = MybatisUtil.getSqlSession();
 		UserVo vo = session.selectOne("users.selectUser", userid);
+		session.close();
 		return vo;
 	}
 
@@ -98,6 +131,50 @@ public class UserDao implements UserDaoI {
 	public int countUser() {
 		SqlSession session = MybatisUtil.getSqlSession();
 		int cnt = session.selectOne("users.countUser");
+		session.close();
 		return cnt;
 	}
+	
+	//회원 등록
+	@Override
+	public int registUser(UserVo vo) {
+		SqlSession session = MybatisUtil.getSqlSession();
+		int cnt = session.insert("users.registUser",vo);
+		if(cnt == 1) {
+			session.commit();
+		}else {
+			session.rollback();
+		}
+		session.close();
+		return cnt;
+	}
+
+	//회원 수정
+	@Override
+	public int modifyUser(UserVo vo) {
+		SqlSession session = MybatisUtil.getSqlSession();
+		int cnt = session.update("users.modifyUser",vo);
+		if(cnt == 1) {
+			session.commit();
+		}else {
+			session.rollback();
+		}
+		session.close();
+		return cnt;
+	}
+
+	//회원 삭제
+	@Override
+	public int deleteUser(String userid) {
+		SqlSession session = MybatisUtil.getSqlSession();
+		int cnt = session.delete("users.deleteUser",userid);
+		if(cnt == 1) {
+			session.commit();
+		}else {
+			session.rollback();
+		}
+		session.close();
+		return cnt;
+	}
+
 }

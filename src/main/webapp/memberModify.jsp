@@ -14,16 +14,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <%@include file="/common/querylib.jsp" %>
 <script>
-$(function(){
-	$("#id").val("${id}")
-	$("#pass").val("${pass}")
-	$("#name").val("${name}")
-	$("#alias").val("${alias}")
-	$("#addr1").val("${addr1}")
-	$("#addr2").val("${addr2}")
-	$("#zipcode").val("${zipcode}")
+$(function() {
+	//주소 찾기 api
+	$("#searchAddr").on("click", function() {
+		new daum.Postcode({
+			oncomplete : function(data) {
+				$("#addr1").val(data.address);
+				$("#addr2").focus();
+				$("#zipcode").val(data.zonecode);
+			}
+		}).open();
+	});
 	
-	status = 1
+	//필수항목이 비워져 있을 경우
+	status = 0
 	$("#searchAddr").on("click", function(){
 		new daum.Postcode({
 	        oncomplete: function(data) {
@@ -51,20 +55,26 @@ $(function(){
 		}
 	})
 	
-	$("#registBtn").on("click", function(){
+	//수정 버튼 클릭시 작동
+	$("#modifyBtn").on("click",function(){
 		if($("#id").val() !="" && $("#pass").val()!="" && $("#name").val()!="")	status = 0;
-		
-		console.log(status)
-		if(status == 1){
-			alert("필수항목을 입력해 주세요.");
+		if(status ==1){
+			alert("필수항목을 입력해 주세요.")
 		}else{
-			$("#frm").attr("method", "POST");
-			$("#frm").attr("action", "${cp}/memRegist.do");
+			$("#frm").attr("method", "POST")
+			$("#frm").attr("action", "${cp}/modify.do");
 			$("#frm").submit();
-		}		
+		}
+	});
+	
+	//취소버튼
+	$("#cancelBtn").on("click",function(){
+		$("#frm").attr("action" , "${cp}/userDetail.do");
+		$("#frm").submit();
 	});
 });
-		
+
+	
 </script>
 
 <title>회원 등록</title>
@@ -89,7 +99,7 @@ $(function(){
 				<section class="content register-page" style="height:100%;">
 					<div class="container-fluid">
 						<div class="login-logo">
-							<b>회원 등록</b>
+							<b>회원 수정</b>
 						</div>
 						<!-- form start -->
 						<div class="card">
@@ -98,7 +108,7 @@ $(function(){
 									<div class="input-group mb-3">
 										<div class="mailbox-attachments clearfix" style="text-align: center; width:100%;">
 											<div class="mailbox-attachment-icon has-img" id="pictureView" style="border: 1px solid green; height: 200px; width: 140px; margin: 0 auto;">
-												<img id="pictureViewImg" style="width:100%; height:100%;"/>
+												<img src="${cp }/userfile?userid=${vo.userid}" name="userfile" id="pictureViewImg" style="width:100%; height:100%;"/>
 											</div>
 											<div class="mailbox-attachment-info">
 												<div class="input-group input-group-sm">
@@ -107,7 +117,7 @@ $(function(){
 												</div>
 											</div>
 										</div>
-										<br />
+										<br/>
 									</div>
 									
 									<div class="form-group row">
@@ -115,7 +125,8 @@ $(function(){
 											<span style="color: red; font-weight: bold;">*</span>아이디
 										</label>
 										<div class="col-sm-9 input-group-sm">
-											<input name="userid" type="text" class="form-control" id="id" placeholder="회원 id">
+											<span class="input-group-append-sm">${vo.userid }</span>
+											<input name="userid" type="hidden" class="form-control" id="id" placeholder="회원 id" value="${vo.userid }">
 										</div>
 									</div>
 									
@@ -123,7 +134,7 @@ $(function(){
 										<label for="pwd" class="col-sm-3" style="font-size: 0.9em;">
 											<span style="color: red; font-weight: bold;">*</span>패스워드</label>
 										<div class="col-sm-9 input-group-sm">
-											<input class="form-control" name="pass" type="password" class="form-control" id="pass" placeholder="비밀번호" />
+											<input class="form-control" name="pass" type="password" class="form-control" id="pass" placeholder="비밀번호" value="${vo.pass }" />
 										</div>
 									</div>
 									
@@ -132,27 +143,27 @@ $(function(){
 											<span style="color: red; font-weight: bold;">*</span>이 름
 										</label>
 										<div class="col-sm-9 input-group-sm">
-											<input class="form-control" name="name" type="text" id="name" placeholder="이름" />
+											<input class="form-control" name="name" type="text" id="name" placeholder="이름" value="${vo.usernm }" />
 										</div>
 
 									</div>
 									<div class="form-group row">
 										<label for="alias" class="col-sm-3" style="font-size: 0.9em;">별명</label>
 										<div class="col-sm-9 input-group-sm">
-											<input class="form-control" name="alias" type="text" id="alias" placeholder="별명">
+											<input class="form-control" name="alias" type="text" id="alias" placeholder="별명" value =${vo.alias }>
 										</div>
 									</div>
 									<div class="form-group row">
 										<label for="addr1" class="col-sm-3 control-label">주소</label>
 										<div class="col-sm-3 input-group-sm">
-											<input name="addr1" type="text" class="form-control" id="addr1" placeholder="주소" readonly>
+											<input name="addr1" type="text" class="form-control" id="addr1" placeholder="주소" readonly value="${vo.addr1 }">
 										</div>
 										<div class="col-sm-3 input-group-sm">
-											<input name="addr2" type="text" class="form-control" id="addr2" placeholder="상세주소">	
+											<input name="addr2" type="text" class="form-control" id="addr2" placeholder="상세주소" value="${vo.addr2 }">	
 										</div>
 										
 										<div class="col-sm-2 input-group-sm">
-											<input name="zipcode" type="text" class="form-control" id="zipcode" placeholder="우편번호" readonly>
+											<input name="zipcode" type="text" class="form-control" id="zipcode" placeholder="우편번호" readonly value="${vo.zipcode }">
 										</div>
 										<div class="col-sm-1 input-group-sm">
 											<span class="input-group-append-sm">
@@ -164,11 +175,11 @@ $(function(){
 									<div class="card-footer">
 										<div class="row">
 											<div class="col-sm-6">
-												<button type="button" id="registBtn" class="btn btn-info">등록</button>
+												<button type="button" id="modifyBtn" class="btn btn-info">수정</button>
 											</div>
 
 											<div class="col-sm-6">
-												<button type="reset" id="cancelBtn" class="btn btn-default float-right">&nbsp;&nbsp;&nbsp;취 &nbsp;&nbsp;소&nbsp;&nbsp;&nbsp;</button>
+												<button type="button" id="cancelBtn" class="btn btn-default float-right">&nbsp;&nbsp;&nbsp;취 &nbsp;&nbsp;소&nbsp;&nbsp;&nbsp;</button>
 											</div>
 
 										</div>

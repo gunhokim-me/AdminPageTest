@@ -17,14 +17,17 @@ public interface UserDaoI {
 
 	//아이디로 검색
 	List<UserVo> idFindUser(String userid);
+	List<UserVo> idFineUserPaging(PageVo vo);
 	int idFindUserCount(String userid);
 	
 	//이름으로 검색
 	List<UserVo> nameFindUser(String usernm);
+	List<UserVo> nameFindUserPaging(PageVo vo);
 	int nameFindUserCount(String usernm);
 	
 	//별명으로 검색
 	List<UserVo> aliasFindUser(String alias);
+	List<UserVo> aliasFindUserPaging(PageVo vo);
 	int aliasFindUserCount(String alias);
 	
 	//선택한 회원 조회
@@ -32,4 +35,13 @@ public interface UserDaoI {
 	
 	//전체 회원수 카운트
 	int countUser();
+	
+	//회원 등록
+	int registUser(UserVo vo);
+	
+	//회원 수정
+	int modifyUser(UserVo vo);
+	
+	//회원 삭제
+	int deleteUser(String userid);
 }

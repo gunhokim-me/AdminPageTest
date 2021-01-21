@@ -41,7 +41,7 @@ public class UserService  implements UserServiceI{
 	public Map<String, Object> idFindUser(PageVo vo) {
 		Map<String, Object> map = new HashMap<>();
 		
-		List<UserVo> userList = dao.selectPagingUser(vo);
+		List<UserVo> userList = dao.idFineUserPaging(vo);
 		int userCnt = dao.idFindUserCount(vo.getVal());
 		
 		map.put("userList", userList);
@@ -55,7 +55,7 @@ public class UserService  implements UserServiceI{
 	public Map<String, Object> nameFindUser(PageVo vo) {
 		Map<String, Object> map = new HashMap<>();
 		
-		List<UserVo> userList = dao.selectPagingUser(vo);
+		List<UserVo> userList = dao.nameFindUserPaging(vo);
 		int userCnt = dao.nameFindUserCount(vo.getVal());
 		
 		map.put("userList", userList);
@@ -69,7 +69,7 @@ public class UserService  implements UserServiceI{
 	public Map<String, Object> aliasFindUser(PageVo vo) {
 		Map<String, Object> map = new HashMap<>();
 		
-		List<UserVo> userList = dao.selectPagingUser(vo);
+		List<UserVo> userList = dao.aliasFindUserPaging(vo);
 		int userCnt = dao.aliasFindUserCount(vo.getVal());
 		
 		map.put("userList", userList);
@@ -78,14 +78,34 @@ public class UserService  implements UserServiceI{
 		return map;
 	}
 
+	//선택한 회원 조회
 	@Override
 	public UserVo selectUser(String userid) {
 		return dao.selectUser(userid);
 	}
 
+	//전체 회원 수 조회
 	@Override
 	public int countUser() {
 		return dao.countUser();
+	}
+
+	//회원 등록
+	@Override
+	public int registUser(UserVo vo) {
+		return dao.registUser(vo);
+	}
+
+	//회원 수정
+	@Override
+	public int modifyUser(UserVo vo) {
+		return dao.modifyUser(vo);
+	}
+
+	//회원 삭제
+	@Override
+	public int deleteUser(String userid) {
+		return dao.deleteUser(userid);
 	}
 
 }

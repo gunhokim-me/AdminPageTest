@@ -19,6 +19,7 @@
 
 <script>
 	$(function(){
+		//회원을 클릭 했을 경우(상세페이지 이동)
 		$(".user").on("click",function(){
 			var userid = $(this).data("userid");
 			$("#userid").val(userid);
@@ -26,24 +27,32 @@
 			$("#frm").submit();
 		});
 		
+		//페이지에 출력될 갯수 바꿀경우
 		$("#perPageNum").change(function(){
 			var page = $(this).val();
 			$("#pageSize").val(page);
 			$("#frm").attr("action", "${cp}/paging.do");
 			$("#frm").submit();
 		});
+		$("#perPageNum").val("${pagesize}")
 		
+		//검색 타입 바꿀경우
 		$("#searchType").change(function(){
 			type = $(this).val();
 		});
+		
+		//검색을 눌렀을 때
 		$("#searchBtn").on("click", function(){
 			var keyword = $("#word").val();
+			var page = $("#perPageNum").val();
+			$("#pageSize").val(page);
 			$("#search").val(keyword);
 			$("#type").val(type);
 			console.log(keyword)
 			$("#frm").attr("action", "${cp}/paging.do");
 			$("#frm").submit();
 		});
+		$("#searchType").val("${type}")
 	});
 </script>
 
@@ -97,7 +106,7 @@
 										<option value="n">이름</option>
 										<option value="a">별명</option>
 									</select> <input class="form-control" type="text" name="keyword" id="word" placeholder="검색어를 입력하세요." value=""> <span class="input-group-append">
-										<button class="btn btn-primary" type="button" id="searchBtn" data-card-widget="search" onclick="searchList_go(1);">
+										<button class="btn btn-primary" type="button" id="searchBtn" data-card-widget="search">
 											<i class="fa fa-fw fa-search"></i>
 										</button>
 									</span>
@@ -112,7 +121,7 @@
 										<tbody>
 											<tr>
 												<th>아이디</th>
-												<th>패스워드</th>
+												<th>이름</th>
 												<th>별명</th>
 												<th>도로주소</th>
 												<th>상세주소</th>
@@ -122,7 +131,7 @@
 											<c:forEach items="${userList }" var="users">
 												<tr class="user" data-userid="${users.userid }">
 													<td>${users.userid }</td>
-													<td>${users.pass }</td>
+													<td>${users.usernm }</td>
 													<td>${users.alias }</td>
 													<td>${users.addr1 } </td>
 													<td>${users.addr2 } </td>
@@ -141,10 +150,16 @@
 							<nav aria-label="member list Navigation">
 								<ul class="pagination justify-content-center m-0">
 									<li class="page-item"><a class="page-link" href="${cp}/paging.do?page=1&pageSize=${pageVo.getPageSize()}"><i class="fas fa-angle-double-left"></i></a></li>
-									<c:if test="${pageVo.getPage()-1  > 1}">
-										<li class="page-item"><a class="page-link" href="${cp}/paging.do?page=${pageVo.getPage()-1 }&pageSize=${pageVo.getPageSize()}"><i class="fas fa-angle-left"></i></a></li>
-									</c:if>
-									<li class="page-item"><a class="page-link" href="${cp}/paging.do?page=1&pageSize=${pageVo.getPageSize()}"><i class="fas fa-angle-left"></i></a></li>
+									
+									<c:choose>
+										<c:when test="${pageVo.getPage()-1  <= 1}">
+											<li class="page-item"><a class="page-link" href="${cp}/paging.do?page=1&pageSize=${pageVo.getPageSize()}"><i class="fas fa-angle-left"></i></a></li>
+										</c:when>
+										<c:otherwise>
+											<li class="page-item"><a class="page-link" href="${cp}/paging.do?page=${pageVo.getPage()-1}&pageSize=${pageVo.getPageSize()}"><i class="fas fa-angle-left"></i></a></li>
+										</c:otherwise>
+									</c:choose>
+									
 									<c:forEach begin="1" end="${pagination }" var="i">
 										<c:choose>
 											<c:when test="${pageVo.getPage() == i}">
@@ -155,7 +170,15 @@
 											</c:otherwise>
 										</c:choose>
 									</c:forEach>
-									<li class="page-item"><a class="page-link" href="${cp}/paging.do?page=${pageVo.getPage()+1 }&pageSize=${pageVo.getPageSize()}"><i class="fas fa-angle-right"></i></a></li>
+									
+									<c:choose>
+										<c:when test="${pageVo.getPage() ==  pagination }">
+											<li class="page-item"><a class="page-link" href="${cp}/paging.do?page=${pagination }&pageSize=${pageVo.getPageSize()}"><i class="fas fa-angle-right"></i></a></li>
+										</c:when>
+										<c:otherwise>
+											<li class="page-item"><a class="page-link" href="${cp}/paging.do?page=${pageVo.getPage()+1 }&pageSize=${pageVo.getPageSize()}"><i class="fas fa-angle-right"></i></a></li>
+										</c:otherwise>
+									</c:choose>
 									<li class="page-item"><a class="page-link" href="${cp}/paging.do?page=${pagination }&pageSize=${pageVo.getPageSize()}"><i class="fas fa-angle-double-right"></i></a></li>
 								</ul>
 							</nav>

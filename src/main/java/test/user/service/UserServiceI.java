@@ -31,4 +31,13 @@ public interface UserServiceI {
 	//전체 회원수 카운트
 	int countUser();
 	
+	//회원 등록
+	int registUser(UserVo vo);
+	
+	//회원 수정
+	int modifyUser(UserVo vo);
+	
+	//회원 삭제
+	int deleteUser(String userid);
+	
 }

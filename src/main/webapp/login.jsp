@@ -36,7 +36,7 @@
 			$("#rememberme").attr("checked", true);
 		}
 
-		$("#signin").on("click", function() {
+		$("#login").on("click", function() {
 			if ($('#rememberme').is(":checked")) {
 				Cookies.set("userid", $("#userid").val());
 				Cookies.set("rememberme", "Y");
@@ -74,12 +74,12 @@
 					<div class="row">
 						<div class="col-sm-8">
 							<div class="checkbox icheck">
-								<label> <input type="checkbox" name="rememberme"	 id="rememberme"value=""> Remember Me</label>
+								<label> <input type="checkbox" name="rememberme" id="rememberme" value="rememberme"> Remember Me</label>
 							</div>
 						</div>
 						<!-- /.col -->
 						<div class="col-sm-4">
-							<button type="submit" class="btn btn-primary btn-block btn-flat">로그인</button>
+							<button type="submit" id="login" class="btn btn-primary btn-block btn-flat">로그인</button>
 						</div>
 						<!-- /.col -->
 					</div>
