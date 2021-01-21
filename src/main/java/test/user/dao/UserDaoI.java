@@ -33,6 +33,8 @@ public interface UserDaoI {
 	//선택한 회원 조회
 	UserVo selectUser(String userid);
 	
+	List<UserVo> selectLikeUser(String userid);
+	
 	//전체 회원수 카운트
 	int countUser();
 	

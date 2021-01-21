@@ -177,4 +177,13 @@ public class UserDao implements UserDaoI {
 		return cnt;
 	}
 
+	@Override
+	public List<UserVo> selectLikeUser(String userid) {
+		SqlSession session = MybatisUtil.getSqlSession();
+		List<UserVo> list = session.selectList("users.idFindLikeUser",userid);
+		session.close();
+		
+		return list;
+	}
+
 }

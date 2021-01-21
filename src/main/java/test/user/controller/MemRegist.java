@@ -69,7 +69,17 @@ public class MemRegist extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doPost(req, resp);
+		String userid = req.getParameter("id");
+		UserVo vo = service.selectUser(userid);
+		int cnt = 0;
+		if(vo != null) {
+			cnt = 1;
+		}else {
+			cnt = 0;
+		}
+		req.setAttribute("cnt", cnt);
+		req.getRequestDispatcher("/check.jsp").forward(req, resp);
+		
 	}
 
 }

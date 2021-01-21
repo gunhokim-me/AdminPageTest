@@ -22,7 +22,7 @@ public class UserDaoTest {
 	public void SelectUserCountTest() {
 		/***Given***/
 		String userid = "brown";
-		String pass = "brownPass";
+		String pass = "brown";
 		UserVo vo = new UserVo();
 		vo.setUserid(userid);
 		vo.setPass(pass);
@@ -40,7 +40,18 @@ public class UserDaoTest {
 		/***When***/
 		List<UserVo> list = dao.allUserList();
 		/***Then***/
-		assertEquals(15, list.size());
+		assertEquals(16, list.size());
+	}
+	
+	
+	@Test
+	public void selectLikeUserTest() {
+		/***Given***/
+		String userid ="brown%";
+		/***When***/
+		List<UserVo> list = dao.selectLikeUser(userid);
+		/***Then***/
+		assertEquals(1, list.size());
 	}
 
 }

@@ -10,6 +10,17 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   
+  
+ <filter>
+  	<filter-name>SessionFilter</filter-name>
+  	<filter-class>test.filter.SessionFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>SessionFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  
   <listener>
   	<listener-class>test.listener.ApplicationListener</listener-class>
   </listener>

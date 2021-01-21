@@ -57,7 +57,7 @@ public class ModifyUser extends HttpServlet{
 			realfilename = UUID.randomUUID().toString() + fileExtension;
 			
 			userfile.write("D:/upload/" + realfilename);
-			vo.setFilename(realfilename);
+			vo.setFilename(filename);
 			vo.setRealfilename(realfilename);
 		}else {
 			UserVo vo2 = new UserVo();
@@ -72,12 +72,5 @@ public class ModifyUser extends HttpServlet{
 		}else {
 			doGet(req, resp);
 		}
-		
-		
-		
-		
-		
-		
 	}
-
 }

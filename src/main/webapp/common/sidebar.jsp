@@ -5,8 +5,8 @@
 			<!-- Left navbar links -->
 			<ul class="navbar-nav">
 				<li class="nav-item"><a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a></li>
-				<li class="nav-item d-none d-sm-inline-block"><a href="#" class="nav-link">HOME</a></li>
-				<li class="nav-item d-none d-sm-inline-block"><a href="#;" class="nav-link">회원관리</a></li>
+				<li class="nav-item d-none d-sm-inline-block"><a href="${cp }/paging.do" class="nav-link">HOME</a></li>
+				<li class="nav-item d-none d-sm-inline-block"><a href="${cp }/paging.do" class="nav-link">회원관리</a></li>
 			</ul>
 
 			<!-- SEARCH FORM -->
@@ -109,11 +109,11 @@
 				<!-- Sidebar user panel (optional) -->
 				<div class="user-panel mt-3 pb-3 mb-3 d-flex">
 					<div class="image">
-						<img src="./profile/sally.png" class="img-circle elevation-2" alt="User Image">
+						<img src="${cp }/userfile?userid=${S_USER.userid}" class="img-circle elevation-2" alt="User Image">
 					</div>
 					<div class="info">
 						<div class="row">
-							<a class="col-md-8" href="#" class="d-block">sally(병아리)</a>
+							<a class="col-md-8" href="${cp }/userDetail.do?userid=${S_USER.userid}" class="d-block">${S_USER.userid }(${S_USER.alias })</a>
 						</div>
 					</div>
 				</div>

@@ -36,6 +36,7 @@ public class PagingUser extends HttpServlet {
 		PageVo vo = new PageVo();
 		List<UserVo> list = new ArrayList<UserVo>();
 		
+		//페이징 처리
 		int page = pageparam == null? 1 :  Integer.parseInt(pageparam) ;
 		int pageSize = 5;
 		if(pageSizeParam == null) {
@@ -50,31 +51,37 @@ public class PagingUser extends HttpServlet {
 		vo.setPage(page);
 		vo.setPageSize(pageSize);
 		
+		//분류에 따른 검색
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(type == null || type.equals("")) {
 			map = userService.selectPagingUser(vo);
-			list = (List<UserVo>) map.get("userList");
 		}else if(type.equals("i")) {
-			vo.setVal(search);
+			vo.setVal(search+"%");
 			map = userService.idFindUser(vo);
-			list = (List<UserVo>) map.get("userList");
 		}else if(type.equals("n")) {
-			vo.setVal(search);
+			vo.setVal(search+"%");
 			map = userService.nameFindUser(vo);
-			list = (List<UserVo>) map.get("userList");
 		}else if(type.equals("a")) {
-			vo.setVal(search);
+			vo.setVal(search+"%");
 			map = userService.aliasFindUser(vo);
-			list = (List<UserVo>) map.get("userList");
+		}else {
+			map = userService.selectPagingUser(vo);
 		}
 		
+		int startpage = 0;
+		int endpage = 0;
 		
+		if(page-4 <= 1) {
+			startpage = 1;
+		}else {
+			
+		}
 		
+		//결과값 scope에 넣고 날리기
 		int userCnt = (int)map.get("userCnt");
-		
 		int pagination = (int)Math.ceil((double)userCnt /pageSize);
 		
-		//list = (List<UserVo>) map.get("userList");
+		list = (List<UserVo>) map.get("userList");
 		if(list != null) {
 			req.setAttribute("userList", list);
 		}

@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import test.user.service.UserService;
 import test.user.service.UserServiceI;
@@ -29,6 +30,10 @@ public class LoginController extends HttpServlet{
 		int cnt = service.userlogin(vo);
 		
 		if(cnt == 1) {
+			HttpSession session = req.getSession();
+			UserVo vo2 = new UserVo();
+			vo2 = service.selectUser(userid);
+			session.setAttribute("S_USER", vo2);
 			List<UserVo> userList = service.allUserList();
 			req.setAttribute("userList", userList);
 			req.getRequestDispatcher("/paging.do").forward(req, resp);

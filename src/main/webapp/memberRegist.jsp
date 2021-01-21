@@ -13,6 +13,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <%@include file="/common/querylib.jsp" %>
+
 <script>
 $(function(){
 	$("#id").val("${id}")
@@ -24,6 +25,36 @@ $(function(){
 	$("#zipcode").val("${zipcode}")
 	
 	status = 1
+	chk = 0;
+	//중복확인
+	$('#check').on("click", function() {
+			id = $("#id").val();
+			if (id.length == 0 || id == null)
+				return alert("아이디를 입력하세요.")
+
+			$.ajax({
+				type : "get",
+				url : "${cp}/memRegist.do",
+				dataType : "json",
+				data : { id : id },
+				success : function(data) {
+					if (data.res == 0) {
+						chk = 0;
+						alert("사용할 수 있는 ID입니다.");
+						$("#check").prop('disabled', true);
+					} else {
+						alert("중복된 아이디입니다.");
+						chk = 1;
+					}
+				},
+				error : function(xhr) {
+					alert(xhr.status)
+				}
+			})
+		});
+	
+	//필수항목 체크
+	
 	$("#searchAddr").on("click", function(){
 		new daum.Postcode({
 	        oncomplete: function(data) {
@@ -33,34 +64,45 @@ $(function(){
 	        }
 	    }).open();
 	});
+	
 	$("#id").keydown(function(){
 		if($("#id").val() == ""){
+			$("#check").prop('disabled', false);
 			status = 1;
 		}
-	})
+	});
+	$("#id").keydown(function(){
+		$("#check").prop('disabled', false);
+		chk = 1;
+	});
 	
 	$("#pass").keydown(function(){
 		if($("#pass").val() == ""){
+			$("#check").prop('disabled', false);
 			status = 1;
 		}
-	})
+	});
 	
 	$("#name").keydown(function(){
 		if($("#name").val() == ""){
+			$("#check").prop('disabled', false);
 			status = 1;
 		}
 	})
 	
 	$("#registBtn").on("click", function(){
 		if($("#id").val() !="" && $("#pass").val()!="" && $("#name").val()!="")	status = 0;
+		if(chk == 1) status = 2;
 		
 		console.log(status)
 		if(status == 1){
 			alert("필수항목을 입력해 주세요.");
+		}else if(status == 2){
+			alert("중복체크를 해야 합니다.");
 		}else{
 			$("#frm").attr("method", "POST");
 			$("#frm").attr("action", "${cp}/memRegist.do");
-			$("#frm").submit();
+			//$("#frm").submit();
 		}		
 	});
 });
@@ -114,8 +156,11 @@ $(function(){
 										<label for="id" class="col-sm-3" style="font-size: 0.9em;">
 											<span style="color: red; font-weight: bold;">*</span>아이디
 										</label>
-										<div class="col-sm-9 input-group-sm">
+										<div class="col-sm-7 input-group-sm">
 											<input name="userid" type="text" class="form-control" id="id" placeholder="회원 id">
+										</div>
+										<div class="col-sm-2 input-group-sm">
+											<input name="check" type="button" class="btn btn-info" id="check" value="중복확인">
 										</div>
 									</div>
 									
